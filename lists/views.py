@@ -1,7 +1,7 @@
 from django.shortcuts import render
+import pdb
 
 
 def home_page(request):
-    # return HttpResponseRedirect('<h1>Ola Mundo</h1>')
-    pass
+    return render(request, 'lists/teste.html')
 
