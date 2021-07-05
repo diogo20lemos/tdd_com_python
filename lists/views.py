@@ -4,6 +4,5 @@ import pdb
 
 
 def home_page(request):
-    return HttpResponse('<html><title>To-Do lists</title></html>')
-    # return render(request, 'lists/teste.html')
+    return render(request, 'lists/home.html')
 
