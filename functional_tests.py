@@ -42,7 +42,7 @@ class NewVisitorTest(unittest.TestCase):
         # "1: Buy peacock feathers" como um item em uma lista de tarefas
         inputbox.send_keys(Keys.ENTER)
         time.sleep(2)
-        self.check_for_row_in_list_table('1: Buy peacock feathers')
+        self.check_for_row_in_list_table('1:Buy peacock feathers')
 
         # table = self.browser.find_element_by_id('id_list_table')
         # rows = table.find_elemente_by_tag_name('tr')
@@ -62,9 +62,9 @@ class NewVisitorTest(unittest.TestCase):
         time.sleep(1)
 
         # A página é atualizada novamente e agora mostra os dois itens em sua lista
-        self.check_for_row_in_list_table('1: Buy peacock feathers')
+        self.check_for_row_in_list_table('1:Buy peacock feathers')
         self.check_for_row_in_list_table(
-            '2: Use peacock feathers to make a fly')
+            '2:Use peacock feathers to make a fly')
 
         # table = self.browser.find_element_by_id('id_list_table')
         # rows = table.find_elemente_by_tag_name('tr')
