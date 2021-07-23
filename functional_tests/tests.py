@@ -3,6 +3,7 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 import unittest
 import time
+from selenium.common.exceptions import WebDriverException
 
 
 class NewVisitorTest(LiveServerTestCase):
@@ -42,17 +43,7 @@ class NewVisitorTest(LiveServerTestCase):
         # Quando ela tecla enter, a página é atualizada, e agora a pa´gina lista
         # "1: Buy peacock feathers" como um item em uma lista de tarefas
         inputbox.send_keys(Keys.ENTER)
-        time.sleep(2)
-        self.check_for_row_in_list_table('1:Buy peacock feathers')
-
-        # table = self.browser.find_element_by_id('id_list_table')
-        # rows = table.find_elemente_by_tag_name('tr')
-        # self.assertTrue(
-        #     any(row.text == '1: Buy peacock feathers' for row in rows),
-        #     f"New to-do item did not appear in table. Contents were: \
-        #     \n{table.text}"
-        # )
-        # self.assertIn('1: Buy peacock feathers', [row.text for row in rows])
+        self.wait_for_row_in_list_table('1:Buy peacock feathers')
 
         # Ainda continua havendo uma caixa de texto convidando-a a acrescentar outro
         # item. Ela insere "Use peacock feathers to make a fly" (Usar penas de pavão
@@ -60,11 +51,10 @@ class NewVisitorTest(LiveServerTestCase):
         inputbox = self.browser.find_element_by_id('id_new_item')
         inputbox.send_keys('Use peacock feathers to make a fly')
         inputbox.send_keys(Keys.ENTER)
-        time.sleep(1)
 
         # A página é atualizada novamente e agora mostra os dois itens em sua lista
-        self.check_for_row_in_list_table('1:Buy peacock feathers')
-        self.check_for_row_in_list_table(
+        self.wait_for_row_in_list_table('1:Buy peacock feathers')
+        self.wait_for_row_in_list_table(
             '2:Use peacock feathers to make a fly')
 
         # table = self.browser.find_element_by_id('id_list_table')
@@ -81,6 +71,21 @@ class NewVisitorTest(LiveServerTestCase):
         self.fail('Finish the test!')
 
         # Satisfeita, ela volta a dormir
+
+    def wait_for_row_in_list_table(self, row_text):
+        MAX_WAIT = 10
+        start_time = time.time()
+        while True:
+            try:
+                table = self.browser.find_element_by_id('id_list_table')
+                rows = table.find_elements_by_tag_name('tr')
+                self.assertIn(row_text, [row.text for row in rows])
+                return
+            except(AssertionError, WebDriverException) as e:
+                if time.time() - start_time > MAX_WAIT:
+                    raise e
+                time.sleep(0.5)
+
 
 #
 # if __name__ == '__main__':
